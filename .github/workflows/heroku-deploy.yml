@@ -1,0 +1,29 @@
+name: Deploy on Heroku
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  HerokuDeploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: ${{secrets.HEROKU_APP_NAME}}
+          heroku_email: ${{secrets.HEROKU_EMAIL}}
+          branch: "main"
+      - name: make a new envfile
+      - uses: Spicypizz/create-envfile@v3
+        with:
+          DATABASE_URL: "postgres://postgres:4815162342@db_v2:5432/didi-students-test"
+          POSTGRES_USER: "postgres"
+          POSTGRES_PASSWORD: "4815162342"
+          POSTGRES_DB: "didi-students-test" 
+          file_name: ".env.test"
+      - name: "Run tests" 
+        run: docker compose -f docker-compose-tests.yml run node_app npm run test
