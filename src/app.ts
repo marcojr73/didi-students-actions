@@ -6,6 +6,7 @@ app.use(json());
 
 app.get("/students", async (req: Request, res: Response) => {
   const students = await prisma.student.findMany();
+ 
   res.send(students);
 });
 
@@ -20,6 +21,8 @@ app.post("/students", async (req: Request, res: Response) => {
 });
 
 app.get("/students/random", async (req: Request, res: Response) => {
+  console.log("oi")
+  console.log("oi")
   const students = await prisma.student.findMany();
   if (students.length > 0) {
     const randomStudent = students[Math.floor(Math.random() * students.length)];
